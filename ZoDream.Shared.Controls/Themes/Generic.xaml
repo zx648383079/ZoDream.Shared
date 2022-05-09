@@ -1,0 +1,25 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:ZoDream.Shared.Controls">
+
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/BaseStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/HyperlinkButton.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/IconButton.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/SwitchInput.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/ContentDialog.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/IconToggleButton.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/FileInput.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/ProgressBar.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/ProgressRing.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/NumberInput.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/Color.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+
+    
+
+    
+</ResourceDictionary>
