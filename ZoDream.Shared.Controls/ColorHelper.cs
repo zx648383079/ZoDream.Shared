@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ZoDream.Shared.Controls
 {
@@ -94,6 +91,20 @@ namespace ZoDream.Shared.Controls
         public static string To(Color color)
         {
             return color.ToString();
+        }
+
+        public static Brush ColorToBrush(string val)
+        {
+            return new SolidColorBrush(From(val));
+        }
+
+        public static Brush ImageToBrush(string imageUrl)
+        {
+            if (!imageUrl.StartsWith("http") && !imageUrl.StartsWith("pack:"))
+            {
+                imageUrl = string.Concat("pack://application:,,,/", imageUrl);
+            }
+            return new ImageBrush(new BitmapImage(new Uri(imageUrl, UriKind.Absolute)));
         }
     }
 }
