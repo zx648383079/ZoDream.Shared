@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ZoDream.Shared.Controls
 {
@@ -57,15 +58,7 @@ namespace ZoDream.Shared.Controls
             Unloaded += ProgressRing_Unloaded;
         }
 
-        private void ProgressRing_Unloaded(object sender, RoutedEventArgs e)
-        {
-            CompositionTarget.Rendering -= CompositionTarget_Rendering;
-        }
-
-        private void ProgressRing_Loaded(object sender, RoutedEventArgs e)
-        {
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
-        }
+        
 
         public bool IsActive
         {
@@ -81,12 +74,24 @@ namespace ZoDream.Shared.Controls
                     (d as ProgressRing)?.InvalidateVisual();
                 }));
 
-
+        private readonly DispatcherTimer Timer = new();
         private int Counter = 0;
-        private int MaxCounter = 720;
+        private readonly int MaxCounter = 720;
+        private readonly int Speed = 3;
 
+        private void ProgressRing_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Timer.Stop();
+        }
 
-        private void CompositionTarget_Rendering(object? sender, EventArgs e)
+        private void ProgressRing_Loaded(object sender, RoutedEventArgs e)
+        {
+            Timer.Interval = TimeSpan.FromMilliseconds(30);
+            Timer.Tick += Timer_Tick;
+            Timer.Start();
+        }
+
+        private void Timer_Tick(object? sender, EventArgs e)
         {
             if (!IsActive)
             {
@@ -102,7 +107,7 @@ namespace ZoDream.Shared.Controls
             {
                 return;
             }
-            Counter++;
+            Counter += Speed;
             if (Counter > MaxCounter)
             {
                 Counter = 0;
