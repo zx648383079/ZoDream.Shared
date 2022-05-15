@@ -74,36 +74,47 @@ namespace ZoDream.Shared.Controls
                     (d as ProgressRing)?.InvalidateVisual();
                 }));
 
-        private readonly DispatcherTimer Timer = new();
         private int Counter = 0;
         private readonly int MaxCounter = 720;
-        private readonly int Speed = 3;
+        private int Speed = 2;
+        private int Fps = 0;
 
         private void ProgressRing_Unloaded(object sender, RoutedEventArgs e)
         {
-            Timer.Stop();
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
         }
 
         private void ProgressRing_Loaded(object sender, RoutedEventArgs e)
         {
-            Timer.Interval = TimeSpan.FromMilliseconds(30);
-            Timer.Tick += Timer_Tick;
-            Timer.Start();
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
-        private void Timer_Tick(object? sender, EventArgs e)
+        private void CompositionTarget_Rendering(object? sender, EventArgs e)
         {
-            if (!IsActive)
+            if (!IsActive || ActualWidth <= 0 || ActualHeight <= 0)
             {
                 return;
             }
+            Fps--;
+            if (Fps > 0)
+            {
+                return;
+            }
+            Fps = 3;
             InvalidateVisual();
+        }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+            Speed = (int)Math.Max(2,
+                100 / Math.Min(sizeInfo.NewSize.Width, sizeInfo.NewSize.Height));
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            if (!IsActive)
+            if (!IsActive || ActualWidth <= 0 || ActualHeight <= 0)
             {
                 return;
             }

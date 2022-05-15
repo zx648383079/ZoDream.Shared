@@ -50,7 +50,7 @@ namespace ZoDream.Shared.Http
         {
             using var client = CreateHttp();
             AppendPath(client, controller, parameters.GetType().GetProperties()
-                .ToDictionary(q => q.Name, q => q.GetValue(parameters).ToString()));
+                .ToDictionary(q => UnStudly(q.Name), q => q.GetValue(parameters).ToString()));
             return await ExecuteAsync<TResult>(client, action);
         }
 
@@ -155,20 +155,6 @@ namespace ZoDream.Shared.Http
             return default(T);
         }
 
-        protected IHttpClient AppendPath(IHttpClient client, string path, IDictionary<string, string>? queries = null)
-        {
-            var uri = client.Url;
-            if (string.IsNullOrEmpty(uri))
-            {
-                uri = path;
-            } else
-            {
-                uri = uri.TrimEnd('/') + "/" + path.TrimStart('/');
-            }
-            client.Url = AppendQeuries(uri, queries);
-            return client;
-        }
-
         /// <summary>
         /// Constructs the base HTTP client, including correct authorization and API version headers.
         /// </summary>
@@ -177,7 +163,31 @@ namespace ZoDream.Shared.Http
             return Interceptor.Request(new Client());
         }
 
-        protected string AppendQeuries(string path, IDictionary<string, string>? queries)
+
+        protected IHttpClient CreatePostHttp()
+        {
+            var client = CreateHttp();
+            client.Method = RequestMethod.Post;
+            return client;
+        }
+
+
+        public static IHttpClient AppendPath(IHttpClient client, string path, IDictionary<string, string>? queries = null)
+        {
+            var uri = client.Url;
+            if (string.IsNullOrEmpty(uri))
+            {
+                uri = path;
+            }
+            else
+            {
+                uri = uri.TrimEnd('/') + "/" + path.TrimStart('/');
+            }
+            client.Url = AppendQeuries(uri, queries);
+            return client;
+        }
+
+        protected static string AppendQeuries(string path, IDictionary<string, string>? queries)
         {
             var query = BuildQueries(queries);
             if (string.IsNullOrEmpty(query))
@@ -191,7 +201,7 @@ namespace ZoDream.Shared.Http
             return path + "?" + query;
         }
 
-        protected string BuildQueries(IDictionary<string, string>? queries)
+        protected static string BuildQueries(IDictionary<string, string>? queries)
         {
             if (queries == null || !queries.Any()) return string.Empty;
             var builder = new StringBuilder();
@@ -201,17 +211,31 @@ namespace ZoDream.Shared.Http
                 {
                     builder.Append("&");
                 }
-                builder.Append($"{System.Net.WebUtility.UrlEncode(content.Key)}={System.Net.WebUtility.UrlEncode(content.Value)}");
+                builder.Append($"{WebUtility.UrlEncode(content.Key)}={WebUtility.UrlEncode(content.Value)}");
             }
             var data = builder.ToString();
             return data.Substring(0, data.Length - 1);
         }
 
-        protected IHttpClient CreatePostHttp()
+        public static string UnStudly(string val)
         {
-            var client = CreateHttp();
-            client.Method = RequestMethod.Post;
-            return client;
+            var res = new StringBuilder();
+            for (int i = 0; i < val.Length; i++)
+            {
+                var code = val[i];
+                if (code < 65 || code > 90)
+                {
+                    res.Append(code);
+                    continue;
+                }
+                if (i > 0)
+                {
+                    res.Append('_');
+                }
+                res.Append((char)(code + 32));
+
+            }
+            return res.ToString();
         }
     }
 }

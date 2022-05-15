@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ZoDream.Shared.Http
@@ -30,7 +31,7 @@ namespace ZoDream.Shared.Http
                 { "Date", timestamp },
                 { "Content-Type", "application/vnd.api+json" },
                 { "Accept", "application/json" },
-                {  "HTTP_USER_AGENT", "zodream/5.0 UWPTimer/2.0" }
+                {  "HTTP_USER_AGENT", "zodream/5.0" }
             };
             //if (GlobalizationPreferences.Languages.Count > 0)
             //{
@@ -42,8 +43,12 @@ namespace ZoDream.Shared.Http
             }
             client.Url = ApiEndpoint;
             client.Headers = headers;
-            // client.AddQuery("appid", AppId).AddQuery("timestamp", timestamp)
-                //.AddQuery("sign", Str.MD5Encode(AppId + timestamp + Secret));
+            RestRequest.AppendPath(client, string.Empty, new Dictionary<string, string>
+            {
+                {"appid", AppId },
+                {"timestamp", timestamp },
+                {"sign", MD5Encode(AppId + timestamp + Secret) }
+            });
             return client;
         }
 
@@ -60,6 +65,21 @@ namespace ZoDream.Shared.Http
         public HttpException ResponseFailure(HttpException ex)
         {
             return ex;
+        }
+
+        public static string MD5Encode(string source)
+        {
+            var sor = Encoding.UTF8.GetBytes(source);
+            var md5 = MD5.Create();
+            var result = md5.ComputeHash(sor);
+            md5.Dispose();
+            var strbul = new StringBuilder(40);
+            for (int i = 0; i < result.Length; i++)
+            {
+                strbul.Append(result[i].ToString("x2"));//加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位
+
+            }
+            return strbul.ToString();
         }
     }
 }
