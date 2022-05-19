@@ -16,10 +16,7 @@
         <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/ProgressRing.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/NumberInput.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/Color.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/Pagination.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-
-    
-
-    
 </ResourceDictionary>
