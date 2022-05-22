@@ -127,6 +127,7 @@ namespace ZoDream.Shared.Controls
             InnerBg = GetTemplateChild(InnerBgName) as Border;
             CircleBtn = GetTemplateChild(CircleBtnName) as Ellipse;
             LabelTb = GetTemplateChild(LabelTbName) as TextBlock;
+            UpdateValue();
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

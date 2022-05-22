@@ -49,7 +49,7 @@ namespace ZoDream.Shared.Http
             Url = url;
         }
 
-        public HttpClient PrepareClient()
+        protected HttpMessageHandler PrepareHandler()
         {
             var handler = new HttpClientHandler()
             {
@@ -82,15 +82,19 @@ namespace ZoDream.Shared.Http
                     password: Proxy.Password)
                 };
             }
-            HttpClient client;
             if (MaxRetries > 1)
             {
-                client = new HttpClient(new HttpRetryHandler(handler, MaxRetries, RetryTime));
-            } else
-            {
-                client = new HttpClient(handler);
+                return new HttpRetryHandler(handler, MaxRetries, RetryTime);
             }
-            client.Timeout = TimeSpan.FromMilliseconds(TimeOut);
+            return handler;
+        }
+
+        public HttpClient PrepareClient()
+        {
+            var client = new HttpClient(PrepareHandler())
+            {
+                Timeout = TimeSpan.FromMilliseconds(TimeOut)
+            };
             return client;
         }
 
