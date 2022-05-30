@@ -17,6 +17,7 @@
         <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/NumberInput.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/Color.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/Pagination.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Shared.Controls;component/Themes/ConsolePanel.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>
