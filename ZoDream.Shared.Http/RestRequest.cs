@@ -213,8 +213,7 @@ namespace ZoDream.Shared.Http
                 }
                 builder.Append($"{WebUtility.UrlEncode(content.Key)}={WebUtility.UrlEncode(content.Value)}");
             }
-            var data = builder.ToString();
-            return data.Substring(0, data.Length - 1);
+            return builder.ToString();
         }
 
         public static string UnStudly(string val)
