@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+	  <LangVersion>10</LangVersion>
+	  <Version>1.0</Version>
+	  <Authors>zodream</Authors>
+	  <Copyright>© 2022 zodream.cn</Copyright>
+  </PropertyGroup>
+
+</Project>
