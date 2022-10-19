@@ -124,6 +124,7 @@ namespace ZoDream.Shared.Http
         {
             try
             {
+                Interceptor.Request(client);
                 using var response = await client.ReadResponseAsync();
                 if (response == null)
                 {
@@ -131,11 +132,12 @@ namespace ZoDream.Shared.Http
                     return default(T);
                 }
                 var content = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (!response.IsSuccessStatusCode)
                 {
                     var err = content.IndexOf("<html") >= 0 ? new HttpException((int)response.StatusCode, 
                         content) : JsonConvert.DeserializeObject<HttpException>(content);
-                    func?.Invoke(err ?? new HttpException());
+                    err = Interceptor.ResponseFailure(err ?? new HttpException());
+                    func?.Invoke(err);
                     return default(T);
                 }
                 if (content is null)
@@ -146,7 +148,7 @@ namespace ZoDream.Shared.Http
                 {
                     return (T)(object)content;
                 }
-                return JsonConvert.DeserializeObject<T>(content);
+                return Interceptor.Response<T>(content);
             }
             catch (Exception ex)
             {
@@ -160,7 +162,7 @@ namespace ZoDream.Shared.Http
         /// </summary>
         protected IHttpClient CreateHttp()
         {
-            return Interceptor.Request(new Client());
+            return new Client();
         }
 
 
@@ -179,9 +181,16 @@ namespace ZoDream.Shared.Http
             {
                 uri = path;
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(path) && path != "/")
             {
-                uri = uri.TrimEnd('/') + "/" + path.TrimStart('/');
+                var index = uri.IndexOf('?');
+                if (index < 0)
+                {
+                    uri = uri.TrimEnd('/') + "/" + path.TrimStart('/');
+                } else
+                {
+                    uri = uri.Substring(0, index).TrimEnd('/') + "/" + path.TrimStart('/') + uri.Substring(index);
+                }
             }
             client.Url = AppendQeuries(uri, queries);
             return client;

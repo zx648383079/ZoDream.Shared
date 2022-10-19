@@ -41,9 +41,10 @@ namespace ZoDream.Shared.Http
             {
                 headers.Add("Authorization", "Bearer " + Token);
             }
+            var path = client.Url;
             client.Url = ApiEndpoint;
             client.Headers = headers;
-            RestRequest.AppendPath(client, string.Empty, new Dictionary<string, string>
+            RestRequest.AppendPath(client, path, new Dictionary<string, string>
             {
                 {"appid", AppId },
                 {"timestamp", timestamp },
