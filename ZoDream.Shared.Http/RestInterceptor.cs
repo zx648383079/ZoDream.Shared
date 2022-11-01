@@ -21,9 +21,9 @@ namespace ZoDream.Shared.Http
             Secret = secret;
         }
 
-        public string Token { get; set; }
+        public virtual string? Token { get; set; }
 
-        public IHttpClient Request(IHttpClient client)
+        public virtual IHttpClient Request(IHttpClient client)
         {
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var headers = new Dictionary<string, string>
@@ -53,17 +53,17 @@ namespace ZoDream.Shared.Http
             return client;
         }
 
-        public T Response<T>(object data)
+        public virtual T Response<T>(object data)
         {
             return (T)data;
         }
 
-        public T Response<T>(string content)
+        public virtual T Response<T>(string content)
         {
             return JsonConvert.DeserializeObject<T>(content);
         }
 
-        public HttpException ResponseFailure(HttpException ex)
+        public virtual HttpException ResponseFailure(HttpException ex)
         {
             return ex;
         }
