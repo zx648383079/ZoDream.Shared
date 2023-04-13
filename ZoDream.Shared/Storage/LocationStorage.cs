@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -79,6 +80,29 @@ namespace ZoDream.Shared.Storage
             var encoding = TxtEncoder.GetEncoding(fs);
             fs.Seek(0, SeekOrigin.End);
             return new StreamWriter(fs, encoding);
+        }
+
+
+        public static string GetMD5(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            {
+                return string.Empty;
+            }
+            using var fs = new FileStream(fileName, FileMode.Open);
+            return GetMD5(fs);
+        }
+
+        public static string GetMD5(Stream fs)
+        {
+            var md5 = MD5.Create();
+            var res = md5.ComputeHash(fs);
+            var sb = new StringBuilder();
+            foreach (var b in res)
+            {
+                sb.Append(b.ToString("x2"));
+            }
+            return sb.ToString();
         }
     }
 }
