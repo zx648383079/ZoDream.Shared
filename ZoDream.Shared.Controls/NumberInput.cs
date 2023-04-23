@@ -174,7 +174,12 @@ namespace ZoDream.Shared.Controls
         private void ValueTb_TextChanged(object sender, TextChangedEventArgs e)
         {
             var oldVal = Value;
-            var val = Convert.ToInt64((sender as TextBox)!.Text);
+            var text = (sender as TextBox)!.Text;
+            var val = 0L;
+            if (!string.IsNullOrWhiteSpace(text) && long.TryParse(text, out var res))
+            {
+                val = res;
+            }
             if (val < Min)
             {
                 val = Min;
