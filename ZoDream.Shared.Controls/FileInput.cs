@@ -77,10 +77,11 @@ namespace ZoDream.Shared.Controls
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FileNameProperty =
             DependencyProperty.Register("FileName", typeof(string), typeof(FileInput), 
-                new PropertyMetadata(string.Empty, (d, e) =>
+                new FrameworkPropertyMetadata(string.Empty, (d, e) =>
                 {
                     (d as FileInput)?.UpdateValue();
-                }));
+                })
+                { BindsTwoWayByDefault = true});
 
         public event RoutedPropertyChangedEventHandler<string>? FileChanged;
 
@@ -90,14 +91,14 @@ namespace ZoDream.Shared.Controls
         {
             base.OnApplyTemplate();
             ValueTb = GetTemplateChild(InputName) as TextBox;
-            var openBtn = GetTemplateChild(OpenName) as ButtonBase;
             if (ValueTb != null)
             {
+                ValueTb.Text = FileName;
                 ValueTb.TextChanged += FileTb_TextChanged;
                 ValueTb.PreviewDragOver += FileTb_PreviewDragOver;
                 ValueTb.PreviewDrop += FileTb_PreviewDrop;
             }
-            if (openBtn != null)
+            if (GetTemplateChild(OpenName) is ButtonBase openBtn)
             {
                 openBtn.Click += OpenBtn_Click;
             }

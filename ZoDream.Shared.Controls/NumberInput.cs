@@ -102,7 +102,7 @@ namespace ZoDream.Shared.Controls
 
         // Using a DependencyProperty as the backing store for Value.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(long), typeof(NumberInput), new PropertyMetadata(0L, OnValueChanged));
+            DependencyProperty.Register("Value", typeof(long), typeof(NumberInput), new FrameworkPropertyMetadata(0L, OnValueChanged) { BindsTwoWayByDefault = true });
 
         public event RoutedPropertyChangedEventHandler<long>? ValueChanged;
         private TextBox? ValueTb;
