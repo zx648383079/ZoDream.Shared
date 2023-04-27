@@ -127,35 +127,37 @@ namespace ZoDream.Shared.Controls
             base.OnRender(drawingContext);
             var width = ActualWidth;
             var height = ActualHeight;
+            var maxRadius = (Orientation == Orientation.Horizontal ? height : width) / 2;
+            var radius = Math.Min(Thickness * MaxRadius, maxRadius);
+            var beginPos = radius;
             var pen = new Pen(BorderBrush, 1);
-            double maxRadius;
             if (Orientation == Orientation.Horizontal)
             {
+                var maxLength = width - 2 * radius;
                 var centerY = height / 2;
                 var y = centerY - Thickness / 2;
-                var w = Math.Max(Math.Min(Value * width / Max, width), 0);
+                var w = Math.Max(Math.Min(Value * maxLength / Max, maxLength), 0);
                 drawingContext.DrawRectangle(Background, pen, new Rect(0, y, width, Thickness));
                 if (Value > 0)
                 {
-                    drawingContext.DrawRectangle(Foreground, pen, new Rect(0, y, w, Thickness));
+                    drawingContext.DrawRectangle(Foreground, pen, new Rect(0, y, w + beginPos, Thickness));
                 }
-                maxRadius = height / 2;
-                CenterPoint = new Point(w, centerY);
+                CenterPoint = new Point(w + beginPos, centerY);
                 
             } else
             {
+                var maxLength = height - 2 * radius;
                 var centerX = width / 2;
                 var x = centerX - Thickness / 2;
-                var h = Math.Max(Math.Min(Value * height / Max, height), 0);
+                var h = Math.Max(Math.Min(Value * maxLength / Max, maxLength), 0);
                 drawingContext.DrawRectangle(Background, pen, new Rect(x, 0, Thickness, height));
                 if (Value > 0)
                 {
-                    drawingContext.DrawRectangle(Foreground, pen, new Rect(x, 0, Thickness, h));
+                    drawingContext.DrawRectangle(Foreground, pen, new Rect(x, 0, Thickness, h + beginPos));
                 }
-                maxRadius = width / 2;
-                CenterPoint = new Point(centerX, h);
+                CenterPoint = new Point(centerX, h + beginPos);
             }
-            var radius = Math.Min(Thickness * MaxRadius, maxRadius);
+            
             drawingContext.DrawEllipse(Background, pen, CenterPoint, radius, radius);
             radius = Math.Min(Thickness * (IsMouseOver ? HoverRadius : MinRadius), maxRadius);
             drawingContext.DrawEllipse(Foreground, pen, CenterPoint, radius, radius);
