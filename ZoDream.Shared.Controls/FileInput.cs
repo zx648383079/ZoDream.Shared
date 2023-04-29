@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ZoDream.Shared.Controls
 {
@@ -82,6 +71,19 @@ namespace ZoDream.Shared.Controls
                     (d as FileInput)?.UpdateValue();
                 })
                 { BindsTwoWayByDefault = true});
+
+
+
+        public bool IsSavePicker {
+            get { return (bool)GetValue(IsSavePickerProperty); }
+            set { SetValue(IsSavePickerProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsSavePicker.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsSavePickerProperty =
+            DependencyProperty.Register("IsSavePicker", typeof(bool), typeof(FileInput), new PropertyMetadata(false));
+
+
 
         public event RoutedPropertyChangedEventHandler<string>? FileChanged;
 
@@ -169,11 +171,10 @@ namespace ZoDream.Shared.Controls
 
         private void OpenFile()
         {
-            var picker = new Microsoft.Win32.OpenFileDialog
-            {
-                Title = "选择文件",
-                RestoreDirectory = true,
-            };
+            Microsoft.Win32.FileDialog picker = IsSavePicker ? new Microsoft.Win32.SaveFileDialog() :
+                new Microsoft.Win32.OpenFileDialog();
+            picker.Title = "选择文件";
+            picker.RestoreDirectory = true;
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 picker.Filter = Filter;
