@@ -254,7 +254,7 @@ namespace ZoDream.Shared.Http
             var content = await ReadAsync();
             if (content == null)
             {
-                return default(T);
+                return default;
             }
             if (typeof(T) == typeof(string))
             {
@@ -267,7 +267,7 @@ namespace ZoDream.Shared.Http
             catch (Exception)
             {
             }
-            return default(T);
+            return default;
         }
 
 

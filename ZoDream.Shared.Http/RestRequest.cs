@@ -21,7 +21,7 @@ namespace ZoDream.Shared.Http
         /// <summary>
         /// Makes an HTTP GET request to the given controller and returns the deserialized response content.
         /// </summary>
-        public async Task<TResult> GetAsync<TResult>(string controller, HttpExceptionFunc? action = null)
+        public async Task<TResult?> GetAsync<TResult>(string controller, HttpExceptionFunc? action = null)
         {
             using var client = CreateHttp();
             AppendPath(client, controller);
@@ -29,7 +29,7 @@ namespace ZoDream.Shared.Http
             return obj;
         }
 
-        public async Task<TResult> GetAsync<TResult>(string controller, string key, object value, HttpExceptionFunc? action = null)
+        public async Task<TResult?> GetAsync<TResult>(string controller, string key, object value, HttpExceptionFunc? action = null)
         {
             using var client = CreateHttp();
             AppendPath(client, controller, new Dictionary<string, string>()
@@ -39,14 +39,14 @@ namespace ZoDream.Shared.Http
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> GetAsync<TResult>(string controller, Dictionary<string, string> parameters, HttpExceptionFunc? action = null)
+        public async Task<TResult?> GetAsync<TResult>(string controller, Dictionary<string, string> parameters, HttpExceptionFunc? action = null)
         {
             using var client = CreateHttp();
             AppendPath(client, controller, parameters);
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> GetAsync<TResult>(string controller, object parameters, HttpExceptionFunc? action = null)
+        public async Task<TResult?> GetAsync<TResult>(string controller, object parameters, HttpExceptionFunc? action = null)
         {
             using var client = CreateHttp();
             AppendPath(client, controller, parameters.GetType().GetProperties()
@@ -58,7 +58,7 @@ namespace ZoDream.Shared.Http
         /// Makes an HTTP POST request to the given controller with the given object as the body.
         /// Returns the deserialized response content.
         /// </summary>
-        public async Task<TResult> PostAsync<TRequest, TResult>(string controller, TRequest body, HttpExceptionFunc? action = null)
+        public async Task<TResult?> PostAsync<TRequest, TResult>(string controller, TRequest body, HttpExceptionFunc? action = null)
         {
             using var client = CreatePostHttp();
             AppendPath(client, controller);
@@ -66,7 +66,7 @@ namespace ZoDream.Shared.Http
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> PostAsync<TResult>(string controller, object body, HttpExceptionFunc? action = null)
+        public async Task<TResult?> PostAsync<TResult>(string controller, object body, HttpExceptionFunc? action = null)
         {
             using var client = CreatePostHttp();
             AppendPath(client, controller);
@@ -74,7 +74,7 @@ namespace ZoDream.Shared.Http
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> PostAsync<TResult>(string controller, Dictionary<string, string> body, HttpExceptionFunc? action = null)
+        public async Task<TResult?> PostAsync<TResult>(string controller, Dictionary<string, string> body, HttpExceptionFunc? action = null)
         {
             using var client = CreatePostHttp();
             AppendPath(client, controller);
@@ -82,7 +82,7 @@ namespace ZoDream.Shared.Http
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> PostAsync<TResult>(string controller, HttpContent body, HttpExceptionFunc? action = null)
+        public async Task<TResult?> PostAsync<TResult>(string controller, HttpContent body, HttpExceptionFunc? action = null)
         {
             using var client = CreatePostHttp();
             AppendPath(client, controller);
@@ -90,7 +90,7 @@ namespace ZoDream.Shared.Http
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> PostAsync<TResult>(string controller, string body, HttpExceptionFunc? action = null)
+        public async Task<TResult?> PostAsync<TResult>(string controller, string body, HttpExceptionFunc? action = null)
         {
             using var client = CreatePostHttp();
             AppendPath(client, controller);
@@ -102,7 +102,7 @@ namespace ZoDream.Shared.Http
         /// Makes an HTTP DELETE request to the given controller and includes all the given
         /// object's properties as URL parameters. Returns the deserialized response content.
         /// </summary>
-        public async Task<TResult> DeleteAsync<TResult>(string controller, uint objectId, HttpExceptionFunc? action = null)
+        public async Task<TResult?> DeleteAsync<TResult>(string controller, uint objectId, HttpExceptionFunc? action = null)
         {
             using var client = CreateHttp();
             client.Method = RequestMethod.Delete;
@@ -110,7 +110,7 @@ namespace ZoDream.Shared.Http
             return await ExecuteAsync<TResult>(client, action);
         }
 
-        public async Task<TResult> PutAsync<TRequest, TResult>(string controller, TRequest body, HttpExceptionFunc? action = null)
+        public async Task<TResult?> PutAsync<TRequest, TResult>(string controller, TRequest body, HttpExceptionFunc? action = null)
         {
             using var client = CreatePostHttp();
             client.Body = new JsonStringContent(body);
@@ -120,7 +120,7 @@ namespace ZoDream.Shared.Http
             return obj;
         }
 
-        private async Task<T> ExecuteAsync<T>(IHttpClient client, HttpExceptionFunc? func)
+        private async Task<T?> ExecuteAsync<T>(IHttpClient client, HttpExceptionFunc? func)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace ZoDream.Shared.Http
                 if (response == null)
                 {
                     func?.Invoke(new HttpException());
-                    return default(T);
+                    return default;
                 }
                 var content = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
@@ -138,11 +138,11 @@ namespace ZoDream.Shared.Http
                         content) : JsonConvert.DeserializeObject<HttpException>(content);
                     err = Interceptor.ResponseFailure(err ?? new HttpException());
                     func?.Invoke(err);
-                    return default(T);
+                    return default;
                 }
                 if (content is null)
                 {
-                    return default(T);
+                    return default;
                 }
                 if (typeof(T) == typeof(string))
                 {
@@ -154,7 +154,7 @@ namespace ZoDream.Shared.Http
             {
                 func?.Invoke(new HttpException(ex.Message));
             }
-            return default(T);
+            return default;
         }
 
         /// <summary>
@@ -192,11 +192,11 @@ namespace ZoDream.Shared.Http
                     uri = uri.Substring(0, index).TrimEnd('/') + "/" + path.TrimStart('/') + uri.Substring(index);
                 }
             }
-            client.Url = AppendQeuries(uri, queries);
+            client.Url = AppendQueries(uri, queries);
             return client;
         }
 
-        protected static string AppendQeuries(string path, IDictionary<string, string>? queries)
+        protected static string AppendQueries(string path, IDictionary<string, string>? queries)
         {
             var query = BuildQueries(queries);
             if (string.IsNullOrEmpty(query))

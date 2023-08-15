@@ -8,7 +8,7 @@ namespace ZoDream.Shared.Http
     {
         IHttpClient Request(IHttpClient client);
 
-        T Response<T>(string content);
+        T? Response<T>(string content);
 
         HttpException ResponseFailure(HttpException ex);
     }

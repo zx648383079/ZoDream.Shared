@@ -58,7 +58,7 @@ namespace ZoDream.Shared.Http
             return (T)data;
         }
 
-        public virtual T Response<T>(string content)
+        public virtual T? Response<T>(string content)
         {
             return JsonConvert.DeserializeObject<T>(content);
         }
@@ -74,13 +74,13 @@ namespace ZoDream.Shared.Http
             var md5 = MD5.Create();
             var result = md5.ComputeHash(sor);
             md5.Dispose();
-            var strbul = new StringBuilder(40);
+            var sb = new StringBuilder(40);
             for (int i = 0; i < result.Length; i++)
             {
-                strbul.Append(result[i].ToString("x2"));//加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位
+                sb.Append(result[i].ToString("x2"));//加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位
 
             }
-            return strbul.ToString();
+            return sb.ToString();
         }
     }
 }
