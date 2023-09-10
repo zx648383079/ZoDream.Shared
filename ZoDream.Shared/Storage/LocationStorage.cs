@@ -16,7 +16,7 @@ namespace ZoDream.Shared.Storage
         /// <returns></returns>
         public static async Task<string> ReadAsync(string file)
         {
-            if (!System.IO.File.Exists(file))
+            if (!File.Exists(file))
             {
                 return string.Empty;
             }
@@ -33,7 +33,7 @@ namespace ZoDream.Shared.Storage
         }
 
         /// <summary>
-        /// 写文本文件 默认使用无bom 的UTF8编码
+        /// 写文本文件 默认使用无 bom 的UTF8编码
         /// </summary>
         /// <param name="file"></param>
         /// <param name="content"></param>

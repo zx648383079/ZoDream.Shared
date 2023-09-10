@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>propcmd</Title>
+			<Shortcut>propcmd</Shortcut>
+			<Description>在 ViewModel 添加方法绑定</Description>
+			<Author>zodream</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>property</ID>
+					<ToolTip>属性名</ToolTip>
+					<Default>Open</Default>
+				</Literal>
+				<Literal>
+					<ID>argument</ID>
+					<ToolTip>接受参数</ToolTip>
+					<Default>_</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="CSharp"><![CDATA[$property$Command = new RelayCommand(Tap$property$);
+
+			public ICommand $property$Command { get; private set; }
+
+			private void Tap$property$(object $argument$) 
+			{
+				$end$
+			}
+			]]>
+			</Code>
+			 <Imports>
+				<Import>
+					<Namespace>ZoDream.Shared.ViewModels</Namespace>
+				</Import>
+			</Imports>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>
