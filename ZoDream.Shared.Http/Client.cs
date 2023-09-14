@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ZoDream.Shared.Http.Models;
+using System.Drawing;
+using System.Diagnostics;
 
 namespace ZoDream.Shared.Http
 {
@@ -297,21 +299,16 @@ namespace ZoDream.Shared.Http
             return await response.Content.ReadAsStreamAsync();
         }
 
+        /// <summary>
+        /// 获取内容长度
+        /// </summary>
+        /// <returns></returns>
         public async Task<long> GetLengthAsync()
         {
             try
             {
                 using var response = await ReadResponseAsync();
-                if (response == null || response.StatusCode != HttpStatusCode.OK)
-                {
-                    return 0;
-                }
-                var length = response.Content.Headers.ContentLength;
-                if (length == null)
-                {
-                    return 0;
-                }
-                return (long)length;
+                return GetContentLength(response);
             }
             catch (Exception)
             {
@@ -319,26 +316,59 @@ namespace ZoDream.Shared.Http
             }
         }
 
-        public async Task<bool> SaveAsync(string file)
+        private long GetContentLength(HttpResponseMessage? response)
         {
-            using (var responseStream = await ReadStreamAsync())
+            if (response == null || response.StatusCode != HttpStatusCode.OK)
             {
-                if (responseStream == null)
-                {
-                    return false;
-                }
-                using var stream = new FileStream(file, FileMode.Create);
-                var bArr = new byte[1024];
-                if (responseStream != null)
-                {
-                    var size = responseStream.Read(bArr, 0, bArr.Length);
-                    while (size > 0)
-                    {
-                        stream.Write(bArr, 0, size);
-                        size = responseStream.Read(bArr, 0, bArr.Length);
-                    }
-                }
+                return 0;
             }
+            var length = response.Content.Headers.ContentLength;
+            if (length == null)
+            {
+                return 0;
+            }
+            return (long)length;
+        }
+
+        public Task<bool> SaveAsync(string file)
+        {
+            return SaveAsync(file, null);
+        }
+
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="progress">下载进度，progress, total</param>
+        /// <returns></returns>
+        public async Task<bool> SaveAsync(string file, Action<long, long>? progress)
+        {
+            using var response = await ReadResponseAsync();
+            var length = GetContentLength(response);
+            if (length <= 0)
+            {
+                return false;
+            }
+            using var responseStream = await ReadStreamAsync(response);
+            if (responseStream == null)
+            {
+                return false;
+            }
+            using var stream = new FileStream(file, FileMode.Create);
+            var bArr = new byte[1024];
+            var byteReceived = 0L;
+            progress?.Invoke(byteReceived, length);
+            int size;
+            do
+            {
+                size = responseStream.Read(bArr, 0, bArr.Length);
+                if (size > 0)
+                {
+                    stream.Write(bArr, 0, size);
+                    byteReceived += size;
+                    progress?.Invoke(byteReceived, length);
+                }
+            } while (size > 0);
             return true;
         }
 
@@ -347,33 +377,29 @@ namespace ZoDream.Shared.Http
         {
             try
             {
-                using (var request = PrepareRequest())
+                using var request = PrepareRequest();
+                request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(current, current + maxSize - 1);
+                using var client = PrepareClient();
+                using var response = await client.SendAsync(request);
+                var responseStream = await ReadStreamAsync(response);
+                if (responseStream is null)
                 {
-                    request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(current, current + maxSize - 1);
-                    using (var client = PrepareClient())
-                    using (var response = await client.SendAsync(request))
-                    {
-                        var responseStream = await ReadStreamAsync(response);
-                        if (responseStream is null)
-                        {
-                            return false;
-                        }
-                        //创建本地文件写入流
-                        var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                        var bArr = new byte[1024];
-                        if (responseStream != null)
-                        {
-                            var size = responseStream.Read(bArr, 0, bArr.Length);
-                            while (size > 0)
-                            {
-                                stream.Write(bArr, 0, size);
-                                size = responseStream.Read(bArr, 0, bArr.Length);
-                            }
-                        }
-                        stream.Close();
-                        responseStream?.Close();
-                    }
+                    return false;
                 }
+                //创建本地文件写入流
+                var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                var bArr = new byte[1024];
+                int size;
+                do
+                {
+                    size = responseStream.Read(bArr, 0, bArr.Length);
+                    if (size > 0)
+                    {
+                        stream.Write(bArr, 0, size);
+                    }
+                } while (size > 0);
+                stream.Close();
+                responseStream?.Close();
             }
             catch (Exception)
             {
