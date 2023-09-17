@@ -282,7 +282,7 @@ namespace ZoDream.Shared.Http
 
         public async Task<Stream?> ReadStreamAsync()
         {
-            using var response = await ReadResponseAsync();
+            var response = await ReadResponseAsync();
             return await ReadStreamAsync(response);
         }
 
