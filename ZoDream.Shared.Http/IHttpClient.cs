@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZoDream.Shared.Http.Models;
 
@@ -36,6 +36,8 @@ namespace ZoDream.Shared.Http
 
         public Task<string?> ReadAsync();
 
+        public Task<string?> ReadAsync(HttpResponseMessage response);
+
         public Task<T?> ReadJsonAsync<T>();
 
         public Task<Stream?> ReadStreamAsync();
@@ -43,16 +45,32 @@ namespace ZoDream.Shared.Http
         public Task<HttpResponseMessage?> ReadResponseAsync();
 
         public Task<long> GetLengthAsync();
+        /// <summary>
+        /// 下载整个文件
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="progress"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public Task<bool> SaveAsync(string file,
+            Action<long, long>? progress = null, CancellationToken token = default);
 
-        public Task<bool> SaveAsync(string file);
+        public Task<bool> SaveAsync(HttpResponseMessage response, string file,
+            Action<long, long>? progress = null, CancellationToken token = default);
         /// <summary>
         /// 获取一段文件，断点续传用，请先使用 GetLengthAsync() 获取内容大小，进行判断
         /// </summary>
         /// <param name="file"></param>
         /// <param name="current"></param>
-        /// <param name="maxSize"></param>
+        /// <param name="maxSize">本次下载的最大长度</param>
+        /// <param name="appendFile"></param>
+        /// <param name="progress"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public Task<bool> SaveAsync(string file, long current, long maxSize = 512000);
+        public Task<bool> SaveAsync(string file,
+            long current, long maxSize = 512000,
+            bool appendFile = true,
+            Action<long, long>? progress = null, CancellationToken token = default);
 
 
 
