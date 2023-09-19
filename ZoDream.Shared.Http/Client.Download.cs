@@ -84,12 +84,13 @@ namespace ZoDream.Shared.Http
                 using var client = PrepareClient();
                 using var response = await client.SendAsync(request);
                 // 重新下载
-                if (!response.Headers.TryGetValues("Content-Range", out var args))
-                {
-                    // 不接受指定范围
-                    // return false;
-                    current = 0;
-                }
+                //if (!response.Content.Headers.ContentRange.HasRange)
+                //{
+                //    // 不接受指定范围
+                //    // return false;
+                //    current = 0;
+                //}
+                current = response.Content.Headers.ContentRange?.From ?? 0;
                 var length = GetContentLength(response);
                 if (length <= 0)
                 {
