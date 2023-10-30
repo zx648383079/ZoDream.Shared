@@ -38,12 +38,20 @@ namespace ZoDream.Shared.Http
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var html = Encoding.Default.GetString(bytes);
-            var regCharset = new Regex(@"charset\b\s*=\s*""*(?<charset>[^""]*)");
-            if (regCharset.IsMatch(html))
+            var match = Regex.Match(html, @"charset\b\s*=\s*""*([\da-zA-Z\-]*)");
+            try
             {
-                return Encoding.GetEncoding(regCharset.Match(html).Groups["charset"].Value);
+                if (match.Success)
+                {
+                    return Encoding.GetEncoding(match.Groups[1].Value);
+                }
+                if (!string.IsNullOrWhiteSpace(charSet))
+                {
+                    return Encoding.GetEncoding(charSet);
+                }
             }
-            return charSet != string.Empty ? Encoding.GetEncoding(charSet) : Encoding.Default;
+            catch { }
+            return Encoding.Default;
         }
 
         public Task<string?> GetAsync(string url)
