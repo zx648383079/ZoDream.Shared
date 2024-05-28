@@ -69,7 +69,7 @@ namespace ZoDream.Shared.UndoRedo
             else if (!manager.IsExecuting)
             {
                 var newValue = GetPropertyValue(sender, e.PropertyName);
-                manager.Add(new PropertyChangedCommand(sender, e.PropertyName, _currentItemChangingPropertyValue, newValue));
+                manager.Add(new SetPropertyCommand(sender, e.PropertyName, _currentItemChangingPropertyValue, newValue));
             }
 
             _currentItemChanging = default;

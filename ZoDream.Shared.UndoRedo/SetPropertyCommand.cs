@@ -1,6 +1,6 @@
 ﻿namespace ZoDream.Shared.UndoRedo
 {
-    public class PropertyChangedCommand(object item, string propertyName, object? oldValue, object? newValue) : IBackableCommand
+    public class SetPropertyCommand(object target, string propertyName, object? oldValue, object? newValue) : IBackableCommand
     {
         public void Undo()
         {
@@ -15,8 +15,8 @@
 
         private void SetPropertyValue(object? value)
         {
-            var propertyInfo = item.GetType().GetProperty(propertyName);
-            propertyInfo?.SetValue(item, value);
+            var propertyInfo = target.GetType().GetProperty(propertyName);
+            propertyInfo?.SetValue(target, value);
         }
     }
 }
