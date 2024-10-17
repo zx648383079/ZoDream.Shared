@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ZoDream.Shared.Storage
+namespace ZoDream.Shared.IO
 {
     /// <summary>   
     /// 用于取得一个文本文件的编码方式(Encoding)。   
@@ -55,7 +54,7 @@ namespace ZoDream.Shared.Storage
             //保存文件流的前4个字节   
             byte byte3 = 0;
             //保存当前Seek位置   
-            var origPos = stream.Seek(0, SeekOrigin.Begin);
+            var originalPos = stream.Seek(0, SeekOrigin.Begin);
             stream.Seek(0, SeekOrigin.Begin);
 
             var nByte = stream.ReadByte();
@@ -113,7 +112,7 @@ namespace ZoDream.Shared.Storage
                 }
             }
             //恢复Seek位置         
-            stream.Seek(origPos, SeekOrigin.Begin);
+            stream.Seek(originalPos, SeekOrigin.Begin);
             return targetEncoding;
         }
     }

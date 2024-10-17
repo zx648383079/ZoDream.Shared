@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZoDream.Shared.Storage
+namespace ZoDream.Shared.IO
 {
     public static class LocationStorage
     {

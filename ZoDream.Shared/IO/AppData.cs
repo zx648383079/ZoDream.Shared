@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ZoDream.Shared.Storage
+namespace ZoDream.Shared.IO
 {
     public static class AppData
     {

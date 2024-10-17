@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.Http", "ZoDr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.HexView", "ZoDream.Shared.HexView\ZoDream.Shared.HexView.csproj", "{8C50F457-FEE9-455D-B4EA-D3AA32899897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoDream.Shared.UndoRedo", "ZoDream.Shared.UndoRedo\ZoDream.Shared.UndoRedo.csproj", "{5E5412D0-F9E4-4A4C-A8C2-55B74C7744BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.UndoRedo", "ZoDream.Shared.UndoRedo\ZoDream.Shared.UndoRedo.csproj", "{5E5412D0-F9E4-4A4C-A8C2-55B74C7744BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.Drawing", "ZoDream.Shared.Drawing\ZoDream.Shared.Drawing.csproj", "{7FFC110F-2F90-475C-AFB5-89068A1C0779}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5E5412D0-F9E4-4A4C-A8C2-55B74C7744BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E5412D0-F9E4-4A4C-A8C2-55B74C7744BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E5412D0-F9E4-4A4C-A8C2-55B74C7744BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FFC110F-2F90-475C-AFB5-89068A1C0779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FFC110F-2F90-475C-AFB5-89068A1C0779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FFC110F-2F90-475C-AFB5-89068A1C0779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FFC110F-2F90-475C-AFB5-89068A1C0779}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
