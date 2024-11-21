@@ -34,9 +34,12 @@
         A16B16G16R16F,      // 0x19, 16 bit float ABGR
         Q8W8V8U8,           // 0x1A, 8 bit signed 4 channel
         VU1616,             // 0x1D, v16u16 signed 16-bit normals
+        Y16,                // 0x20 compressed channel mask, Reach: 16 bits monochrome texture
+        YV12,
+        YUY2,
         Unused1E,           // 0x1E compressed 4-bit single channel
         Dxt5a,              // 0x1F compressed interpolated single channel
-        Y16,                // 0x20 compressed channel mask, Reach: 16 bits monochrome texture
+        
         Dxn,                // 0x21, compressed normals: high quality ('ATI2')
         CTX1,               // 0x22  compressed normals: high compression
         Dxt3aAlpha,         // 0x23 compressed 4-bit alpha channel
@@ -77,6 +80,7 @@
         RF, // R float 32b
         RGF,
         RGBF,
+        RGBAF,
         ARGBF,
         RGB9e5F,
         L8,

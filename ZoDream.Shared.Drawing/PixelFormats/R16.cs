@@ -14,8 +14,8 @@ namespace ZoDream.Shared.Drawing
             var buffer = new byte[size * 4];
             for (var i = 0; i < size; i++)
             {
-                var l = ColorNumerics.From16BitToShort(data[i * 2], data[i * 2 + 1]);
-                var b = ColorNumerics.From16BitTo8Bit(l);
+                var l = ColorConverter.From16BitToShort(data[i * 2], data[i * 2 + 1]);
+                var b = ColorConverter.From16BitTo8Bit(l);
                 var index = i * 4;
                 buffer[index] = b;
                 buffer[index + 1] = 0;

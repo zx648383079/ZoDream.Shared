@@ -21,7 +21,7 @@ namespace ZoDream.Shared.Drawing
                 buffer[index] = data[i * 2 + 1];
                 buffer[index + 1] = data[i * 2 + 1];
                 buffer[index + 2] = data[i * 2 + 1];
-                buffer[index + 3] = 0;
+                buffer[index + 3] = byte.MaxValue;
             }
 
             return buffer;

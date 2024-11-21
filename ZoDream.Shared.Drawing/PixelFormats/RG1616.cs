@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZoDream.Shared.Drawing
 {
@@ -17,9 +13,9 @@ namespace ZoDream.Shared.Drawing
             for (var i = 0; i < size; i++)
             {
                 var index = i * 4;
-                var packed = Pack(new(ColorNumerics.From16BitToShort(data[index], data[index + 1]), ColorNumerics.From16BitToShort(data[index + 2], data[index + 3])));
-                buffer[index] = ColorNumerics.From16BitTo8Bit((ushort)(packed & 0xFFFF));
-                buffer[index + 1] = ColorNumerics.From16BitTo8Bit((ushort)(packed >> 16));
+                var packed = Pack(new(ColorConverter.From16BitToShort(data[index], data[index + 1]), ColorConverter.From16BitToShort(data[index + 2], data[index + 3])));
+                buffer[index] = ColorConverter.From16BitTo8Bit((ushort)(packed & 0xFFFF));
+                buffer[index + 1] = ColorConverter.From16BitTo8Bit((ushort)(packed >> 16));
                 buffer[index + 2] = byte.MinValue;
                 buffer[index + 3] = byte.MaxValue;
             }

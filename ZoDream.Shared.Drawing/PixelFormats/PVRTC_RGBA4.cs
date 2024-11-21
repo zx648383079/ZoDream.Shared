@@ -166,13 +166,13 @@ namespace ZoDream.Shared.Drawing
 
                             // PVRTC uses weightings of 0, 3/8, 5/8 and 1
                             // The boundaries for these are 3/16, 1/2 (=8/16), 13/16
-                            int projection = ColorNumerics.Sum(v * d) * 16; //Mathf.RoundToInt(Vector4.Dot(v, d)) * 16;
-                            int lengthSquared = ColorNumerics.Sum(d * d); //Mathf.RoundToInt(Vector4.Dot(d,d));
+                            int projection = ColorConverter.Sum(v * d) * 16; //Mathf.RoundToInt(Vector4.Dot(v, d)) * 16;
+                            int lengthSquared = ColorConverter.Sum(d * d); //Mathf.RoundToInt(Vector4.Dot(d,d));
                             if (projection > 3 * lengthSquared) modulationData++;
                             if (projection > 8 * lengthSquared) modulationData++;
                             if (projection > 13 * lengthSquared) modulationData++;
 
-                            modulationData = ColorNumerics.RotateRight(modulationData, 2);
+                            modulationData = ColorConverter.RotateRight(modulationData, 2);
 
                             currentFactorIndex++;
                         }

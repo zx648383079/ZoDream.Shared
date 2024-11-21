@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZoDream.Shared.Drawing
 {
@@ -14,7 +10,7 @@ namespace ZoDream.Shared.Drawing
             var buffer = new byte[size * 4];
             for (var i = 0; i < (size * 2); i += 2)
             {
-                var temp = ColorNumerics.From16BitToShort(data[i], data[i + 1]);
+                var temp = ColorConverter.From16BitToShort(data[i], data[i + 1]);
                 //var red = (byte)((temp >> 11) & 0x1f);
                 //var green = (byte)((temp >> 5) & 0x3f);
                 //var blue = (byte)(temp & 0x1f);

@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-	  <LangVersion>11</LangVersion>
+	  <LangVersion>12</LangVersion>
 	  <Version>1.1</Version>
 	  <Authors>zodream</Authors>
 	  <Copyright>© 2024 zodream.cn</Copyright>

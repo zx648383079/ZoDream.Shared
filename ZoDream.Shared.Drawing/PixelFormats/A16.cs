@@ -19,8 +19,8 @@ namespace ZoDream.Shared.Drawing
                 buffer[index] = 0xFF;
                 buffer[index + 1] = 0xFF;
                 buffer[index + 2] = 0xFF;
-                buffer[index + 3] = ColorNumerics.From16BitTo8Bit(
-                    ColorNumerics.From16BitToShort(data[offset], data[offset + 1]));
+                buffer[index + 3] = ColorConverter.From16BitTo8Bit(
+                    ColorConverter.From16BitToShort(data[offset], data[offset + 1]));
             }
 
             return buffer;

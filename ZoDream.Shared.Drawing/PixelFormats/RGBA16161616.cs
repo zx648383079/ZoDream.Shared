@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZoDream.Shared.Drawing
 {
@@ -16,17 +12,17 @@ namespace ZoDream.Shared.Drawing
             {
                 var index = i * 4;
                 var offset = i * 6;
-                buffer[index] = ColorNumerics.From16BitTo8Bit(
-                    ColorNumerics.From16BitToShort(data[offset], data[offset + 1])
+                buffer[index] = ColorConverter.From16BitTo8Bit(
+                    ColorConverter.From16BitToShort(data[offset], data[offset + 1])
                 );
-                buffer[index + 1] = ColorNumerics.From16BitTo8Bit(
-                    ColorNumerics.From16BitToShort(data[offset + 2], data[offset + 3])
+                buffer[index + 1] = ColorConverter.From16BitTo8Bit(
+                    ColorConverter.From16BitToShort(data[offset + 2], data[offset + 3])
                 );
-                buffer[index + 2] = ColorNumerics.From16BitTo8Bit(
-                    ColorNumerics.From16BitToShort(data[offset + 4], data[offset + 5])
+                buffer[index + 2] = ColorConverter.From16BitTo8Bit(
+                    ColorConverter.From16BitToShort(data[offset + 4], data[offset + 5])
                 );
-                buffer[index + 3] = ColorNumerics.From16BitTo8Bit(
-                    ColorNumerics.From16BitToShort(data[offset + 6], data[offset + 7])
+                buffer[index + 3] = ColorConverter.From16BitTo8Bit(
+                    ColorConverter.From16BitToShort(data[offset + 6], data[offset + 7])
                 );
             }
 

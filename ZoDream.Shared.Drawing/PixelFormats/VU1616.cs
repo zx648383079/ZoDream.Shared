@@ -20,16 +20,16 @@ namespace ZoDream.Shared.Drawing
                 if (swapXY)
                 {
                     buffer[i] = (byte)((X >> 8) & 0xFF);
-                    buffer[(i) + 1] = (byte)(X & 0xFF);
-                    buffer[(i) + 2] = (byte)((Y >> 8) & 0xFF);
-                    buffer[(i) + 3] = (byte)(Y & 0xFF);
+                    buffer[i + 1] = (byte)(X & 0xFF);
+                    buffer[i + 2] = (byte)((Y >> 8) & 0xFF);
+                    buffer[i + 3] = (byte)(Y & 0xFF);
                 }
                 else
                 {
                     buffer[i] = (byte)((Y >> 8) & 0xFF);
-                    buffer[(i) + 1] = (byte)(Y & 0xFF);
-                    buffer[(i) + 2] = (byte)((X >> 8) & 0xFF);
-                    buffer[(i) + 3] = (byte)(X & 0xFF);
+                    buffer[i + 1] = (byte)(Y & 0xFF);
+                    buffer[i + 2] = (byte)((X >> 8) & 0xFF);
+                    buffer[i + 3] = (byte)(X & 0xFF);
                 }
             }
             return buffer;

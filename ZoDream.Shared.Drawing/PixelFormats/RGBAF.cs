@@ -2,7 +2,7 @@
 
 namespace ZoDream.Shared.Drawing
 {
-    public class ARGBF() : FloatSwapDecoder("ARGB")
+    public class RGBAF() : FloatSwapDecoder("RGBA")
     {
     }
 }
