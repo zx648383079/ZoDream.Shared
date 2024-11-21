@@ -365,10 +365,10 @@ namespace ZoDream.Shared.Drawing
         /// <param name="pixMap"></param>
         /// <param name="begin"></param>
         /// <returns></returns>
-        private static SKPath? TraceContour(SKPixmap pixMap, int beginX, int beginY)
+        private static SKPath? TraceContour(SKPixmap pixMap, int beginX, int beginY, bool isOutline = false)
         {
             var path = new SKPath();
-            path.MoveTo(beginX, beginY);
+            path.MoveTo(beginX, beginY - isOutline ? 1 : 0);
             var directItems = new int[][] {
                 [0, -1], [1, -1], 
                          [1, 0],
@@ -391,6 +391,10 @@ namespace ZoDream.Shared.Drawing
                     if (IsTransparent(pixMap, x, y))
                     {
                         direct = (direct + 1) % directItems.Length;
+                        if (isOutline)
+                        {
+                             path.LineTo(x, y);
+                        }
                         continue;
                     }
                     hasPoint = true;
@@ -401,11 +405,11 @@ namespace ZoDream.Shared.Drawing
                         isBegin = true;
                         path.Close();
                     }
-                    else
+                    else if (!isOutline)
                     {
                         path.LineTo(curX, curY);
                     }
-                    beginDirect = (direct + 5) % directItems.Length;
+                    beginDirect = (direct + 6) % directItems.Length;
                     break;
                 }
                 if (!hasPoint)
