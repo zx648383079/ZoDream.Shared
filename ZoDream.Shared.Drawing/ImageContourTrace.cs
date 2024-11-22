@@ -174,7 +174,7 @@ namespace ZoDream.Shared.Drawing
 
         private static bool IsTransparent(SKPixmap pixMap, int x, int y)
         {
-            if (x < 0 || y < 0)
+            if (x < 0 || y < 0 || x >= pixMap.Width || y >= pixMap.Height)
             {
                 return true;
             }
