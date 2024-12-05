@@ -7,7 +7,7 @@ namespace ZoDream.Shared.Drawing
         public virtual IImageData Decode(Stream input)
         {
             var buffer = new byte[input.Length - input.Position];
-            input.Read(buffer, 0, buffer.Length);
+            input.ReadExactly(buffer);
             return Decode(buffer);
         }
 
