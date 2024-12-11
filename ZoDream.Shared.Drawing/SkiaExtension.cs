@@ -38,11 +38,11 @@ namespace ZoDream.Shared.Drawing
         {
             if (isHorizontal)
             {
-                canvas.Scale(1, -1);
+                canvas.Scale(-1, 1);
             }
             else
             {
-                canvas.Scale(-1, 1);
+                canvas.Scale(1, -1);
             }
         }
 
@@ -228,8 +228,12 @@ namespace ZoDream.Shared.Drawing
         }
         public static SKImage Flip(this SKImage bitmap, bool isHorizontal = true)
         {
+            var cx = bitmap.Width / 2;
+            var cy = bitmap.Height / 2;
             return MutateImage(bitmap.Width, bitmap.Height, surface => {
+                surface.Translate(cx, cy);
                 surface.Flip(isHorizontal);
+                surface.Translate(-cx, -cy);
                 surface.DrawImage(bitmap, 0, 0);
             });
         }
