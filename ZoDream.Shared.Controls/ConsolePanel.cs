@@ -56,6 +56,21 @@ namespace ZoDream.Shared.Controls
         private int lastLineStart = 0;
         private TextBox? InnerTb;
 
+
+        /// <summary>
+        /// 最大显示字数
+        /// </summary>
+        public int MaxLength {
+            get { return (int)GetValue(MaxLengthProperty); }
+            set { SetValue(MaxLengthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MaxLength.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MaxLengthProperty =
+            DependencyProperty.Register("MaxLength", typeof(int), typeof(ConsolePanel), new PropertyMetadata(1000));
+
+
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -83,16 +98,16 @@ namespace ZoDream.Shared.Controls
                 return;
             }
             var val = InnerTb.Text;
-            if (val.Length > 1000)
+            if (val.Length > MaxLength)
             {
-                var i = val.IndexOf('\n', val.Length - 600);
+                var i = val.IndexOf('\n', val.Length - Math.Max(MaxLength - 200, 0));
                 if (i < 0)
                 {
                     val = "";
                 }
                 else
                 {
-                    val = val.Substring(i + 1);
+                    val = val[(i + 1)..];
                 }
             }
             lastLineStart = val.Length;
