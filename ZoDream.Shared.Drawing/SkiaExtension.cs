@@ -188,17 +188,7 @@ namespace ZoDream.Shared.Drawing
 
         public static SKImage? Clip(this SKImage source, SKRectI rect)
         {
-            var target = SKImage.Create(new SKImageInfo(rect.Width, 
-                rect.Height));
-            using var targetPixMap = target.PeekPixels();
-            using var imagePixMap = source.PeekPixels();
-            if (imagePixMap.ExtractSubset(targetPixMap, 
-                rect))
-            {
-                return target;
-            }
-            target.Dispose();
-            return null;
+            return source.Subset(rect);
         }
 
         public static SKBitmap Mutate(SKRect rect, Action<SKCanvas> action)
