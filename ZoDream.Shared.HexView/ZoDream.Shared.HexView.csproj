@@ -4,10 +4,10 @@
     <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-	  <LangVersion>12</LangVersion>
+	  <LangVersion>13</LangVersion>
 	  <Version>1.1</Version>
 	  <Authors>zodream</Authors>
-	  <Copyright>© 2024 zodream.cn</Copyright>
+	  <Copyright>© 2025 zodream.cn</Copyright>
   </PropertyGroup>
 
 </Project>

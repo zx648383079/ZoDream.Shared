@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	  <LangVersion>12</LangVersion>
+	  <LangVersion>13</LangVersion>
 	  <Nullable>enable</Nullable>
 	  <Version>1.1</Version>
 	  <Authors>zodream</Authors>
-	  <Copyright>© 2024 zodream.cn</Copyright>
+	  <Copyright>© 2025 zodream.cn</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.7" />
   </ItemGroup>
 
 </Project>

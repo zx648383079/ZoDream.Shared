@@ -2,11 +2,15 @@
 
   <PropertyGroup>
       <TargetFramework>netstandard2.0</TargetFramework>
-	  <LangVersion>12</LangVersion>
+	  <LangVersion>13</LangVersion>
 	  <Nullable>enable</Nullable>
 	  <Version>1.1</Version>
 	  <Authors>zodream</Authors>
-	  <Copyright>© 2024 zodream.cn</Copyright>
+	  <Copyright>© 2025 zodream.cn</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Buffers" Version="4.6.1" />
+  </ItemGroup>
 
 </Project>
