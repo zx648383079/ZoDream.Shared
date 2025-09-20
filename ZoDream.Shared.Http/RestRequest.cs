@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ZoDream.Shared.Http
@@ -135,7 +135,7 @@ namespace ZoDream.Shared.Http
                 if (!response.IsSuccessStatusCode)
                 {
                     var err = content.IndexOf("<html") >= 0 ? new HttpException((int)response.StatusCode, 
-                        content) : JsonConvert.DeserializeObject<HttpException>(content);
+                        content) : JsonSerializer.Deserialize<HttpException>(content);
                     err = Interceptor.ResponseFailure(err ?? new HttpException());
                     func?.Invoke(err);
                     return default;

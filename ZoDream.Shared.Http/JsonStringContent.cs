@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 
 namespace ZoDream.Shared.Http
 {
@@ -21,7 +19,7 @@ namespace ZoDream.Shared.Http
 
         public StringContent ToHttpContent()
         {
-            return ParseJson(JsonConvert.SerializeObject(Content));
+            return ParseJson(JsonSerializer.Serialize(Content));
         }
 
         public static StringContent ParseJson(string content)

@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace ZoDream.Shared.Http
 {
@@ -60,7 +60,7 @@ namespace ZoDream.Shared.Http
 
         public virtual T? Response<T>(string content)
         {
-            return JsonConvert.DeserializeObject<T>(content);
+            return JsonSerializer.Deserialize<T>(content);
         }
 
         public virtual HttpException ResponseFailure(HttpException ex)

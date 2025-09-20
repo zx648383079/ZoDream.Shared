@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO.Compression;
+using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace ZoDream.Shared.Http
 {
@@ -136,7 +136,7 @@ namespace ZoDream.Shared.Http
             }
             try
             {
-                return JsonConvert.DeserializeObject<T>(content);
+                return JsonSerializer.Deserialize<T>(content);
             }
             catch (Exception)
             {
