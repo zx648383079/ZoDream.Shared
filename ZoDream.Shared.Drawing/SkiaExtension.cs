@@ -24,27 +24,182 @@ namespace ZoDream.Shared.Drawing
             };
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="canvas"></param>
-        /// <param name="deg">360</param>
-        public static void Rotate(this SKCanvas canvas, float deg)
+        extension(SKCanvas canvas)
         {
-            canvas.RotateDegrees(deg);
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="canvas"></param>
+            /// <param name="deg">360</param>
+            public void Rotate(float deg)
+            {
+                canvas.RotateDegrees(deg);
+            }
+
+            public void Flip(bool isHorizontal = true)
+            {
+                if (isHorizontal)
+                {
+                    canvas.Scale(-1, 1);
+                }
+                else
+                {
+                    canvas.Scale(1, -1);
+                }
+            }
         }
 
-        public static void Flip(this SKCanvas canvas, bool isHorizontal = true)
+        extension(SKBitmap bitmap)
         {
-            if (isHorizontal)
+            public SKBitmap Rotate(float angle)
             {
-                canvas.Scale(-1, 1);
+                var (rotatedWidth, rotatedHeight) = ComputedRotate(bitmap.Width, bitmap.Height, angle);
+                return Mutate(rotatedWidth, rotatedHeight, surface => {
+                    surface.Translate(rotatedWidth / 2, rotatedHeight / 2);
+                    surface.RotateDegrees(angle);
+                    surface.Translate(-bitmap.Width / 2, -bitmap.Height / 2);
+                    surface.DrawBitmap(bitmap, new SKPoint());
+                });
             }
-            else
+            public void SaveAs(string fileName)
             {
-                canvas.Scale(1, -1);
+                using var fs = File.OpenWrite(fileName);
+                bitmap.Encode(fs, ConvertFormat(fileName), 100);
+            }
+
+            /// <summary>
+            /// 生成缩略图
+            /// </summary>
+            /// <param name="source"></param>
+            /// <param name="size"></param>
+            /// <returns></returns>
+            public SKBitmap CreateThumbnail(int size)
+            {
+                return Mutate(size, size, canvas => {
+                    var scale = (float)size / Math.Max(bitmap.Width, bitmap.Height);
+                    var w = bitmap.Width * scale;
+                    var h = bitmap.Height * scale;
+                    canvas.DrawBitmap(bitmap, SKRect.Create((size - w) / 2, (size - h) / 2, w, h));
+                });
+            }
+
+            public SKBitmap? Clip(SKRectI rect)
+            {
+                return Mutate(rect.Width, rect.Height, canvas => {
+                    // canvas.Clear(SKColors.Transparent);
+                    canvas.DrawBitmap(bitmap, rect,
+                        SKRect.Create(0, 0, rect.Width, rect.Height));
+                });
+            }
+
+            public SKBitmap? Clip(SKPath path)
+            {
+                var rect = path.Bounds;
+                if (rect.IsEmpty || rect.Width < 1 || rect.Height < 1)
+                {
+                    return null;
+                }
+                return Mutate((int)rect.Width, (int)rect.Height, canvas => {
+                    canvas.DrawBitmap(bitmap, rect,
+                       SKRect.Create(0, 0, rect.Width, rect.Height));
+                    path.Offset(-rect.Left, -rect.Top);
+                    canvas.ClipPath(path, SKClipOperation.Difference);
+                    canvas.Clear();
+                });
             }
         }
+        extension(SKImage image)
+        {
+            public void SaveAs(string fileName)
+            {
+                using var fs = File.OpenWrite(fileName);
+                using var pixMap = image.PeekPixels();
+                pixMap?.Encode(fs, ConvertFormat(fileName), 100);
+            }
+
+            public void Encode(Stream dst, SKEncodedImageFormat format, int quality)
+            {
+                using var pixMap = image.PeekPixels();
+                pixMap?.Encode(dst, format, quality);
+            }
+            public SKImage? Clip(SKPath path)
+            {
+                var rect = path.Bounds;
+                if (rect.IsEmpty || rect.Width < 1 || rect.Height < 1)
+                {
+                    return null;
+                }
+                return MutateImage((int)rect.Width, (int)rect.Height, canvas => {
+                    canvas.DrawImage(image, rect,
+                       SKRect.Create(0, 0, rect.Width, rect.Height));
+                    path.Offset(-rect.Left, -rect.Top);
+                    canvas.ClipPath(path, SKClipOperation.Difference);
+                    canvas.Clear();
+                });
+            }
+
+            public SKImage? Clip(SKRectI rect)
+            {
+                return image.Subset(rect);
+            }
+
+            public SKImage Flip(bool isHorizontal = true)
+            {
+                var cx = image.Width / 2;
+                var cy = image.Height / 2;
+                return MutateImage(image.Width, image.Height, surface => {
+                    surface.Translate(cx, cy);
+                    surface.Flip(isHorizontal);
+                    surface.Translate(-cx, -cy);
+                    surface.DrawImage(image, 0, 0);
+                });
+            }
+            public SKImage Rotate(float angle)
+            {
+                var (rotatedWidth, rotatedHeight) = ComputedRotate(image.Width, image.Height, angle);
+                return MutateImage(rotatedWidth, rotatedHeight, surface => {
+                    surface.Translate(rotatedWidth / 2, rotatedHeight / 2);
+                    surface.RotateDegrees(angle);
+                    surface.Translate(-image.Width / 2, -image.Height / 2);
+                    surface.DrawImage(image, new SKPoint());
+                });
+            }
+
+            public SKImage? Resize(SKImageInfo info, SKSamplingOptions sampling)
+            {
+                if (info.IsEmpty)
+                {
+                    return null;
+                }
+                var target = SKImage.Create(info);
+                using var targetPixMap = target.PeekPixels();
+                using var imagePixMap = image.PeekPixels();
+                if (imagePixMap.ScalePixels(targetPixMap, sampling))
+                {
+                    return target;
+                }
+                target.Dispose();
+                return null;
+            }
+        }
+
+        extension(SKPicture source)
+        {
+            public SKBitmap CreateThumbnail(int size)
+            {
+                return Mutate(size, size, canvas => {
+                    var scale = size / Math.Max(source.CullRect.Width, source.CullRect.Height);
+                    var w = source.CullRect.Width * scale;
+                    var h = source.CullRect.Height * scale;
+                    //canvas.DrawColor(SKColors.Transparent);
+                    canvas.Save();
+                    canvas.Scale(scale, scale);
+                    canvas.DrawPicture(source, (size - w) * scale / 2, (size - h) * scale / 2);
+                    canvas.Restore();
+                });
+            }
+        }
+
 
         /// <summary>
         /// 计算旋转后的外边框高度
@@ -65,16 +220,7 @@ namespace ZoDream.Shared.Drawing
             return (rotatedWidth, rotatedHeight);
         }
 
-        public static SKBitmap Rotate(this SKBitmap bitmap, float angle)
-        {
-            var (rotatedWidth, rotatedHeight) = ComputedRotate(bitmap.Width, bitmap.Height, angle);
-            return Mutate(rotatedWidth, rotatedHeight, surface => {
-                surface.Translate(rotatedWidth / 2, rotatedHeight / 2);
-                surface.RotateDegrees(angle);
-                surface.Translate(-bitmap.Width / 2, -bitmap.Height / 2);
-                surface.DrawBitmap(bitmap, new SKPoint());
-            });
-        }
+        
 
         public static SKEncodedImageFormat ConvertFormat(string extension)
         {
@@ -94,101 +240,6 @@ namespace ZoDream.Shared.Drawing
                 "ktx" => SKEncodedImageFormat.Ktx,
                 _ => SKEncodedImageFormat.Png
             };
-        }
-
-        public static void SaveAs(this SKBitmap bitmap, string fileName)
-        {
-            using var fs = File.OpenWrite(fileName);
-            bitmap.Encode(fs, ConvertFormat(fileName), 100);
-        }
-
-        public static void SaveAs(this SKImage image, string fileName)
-        {
-            using var fs = File.OpenWrite(fileName);
-            using var pixMap = image.PeekPixels();
-            pixMap?.Encode(fs, ConvertFormat(fileName), 100);
-        }
-
-        public static void Encode(this SKImage image, Stream dst, SKEncodedImageFormat format, int quality)
-        {
-            using var pixMap = image.PeekPixels();
-            pixMap?.Encode(dst, format, quality);
-        }
-
-        /// <summary>
-        /// 生成缩略图
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        public static SKBitmap CreateThumbnail(this SKBitmap source, int size)
-        {
-            return Mutate(size, size, canvas => {
-                var scale = (float)size / Math.Max(source.Width, source.Height);
-                var w = source.Width * scale;
-                var h = source.Height * scale;
-                canvas.DrawBitmap(source, SKRect.Create((size - w) / 2, (size - h) / 2, w, h));
-            });
-        }
-
-        public static SKBitmap CreateThumbnail(this SKPicture source, int size)
-        {
-            return Mutate(size, size, canvas => {
-                var scale = size / Math.Max(source.CullRect.Width, source.CullRect.Height);
-                var w = source.CullRect.Width * scale;
-                var h = source.CullRect.Height * scale;
-                //canvas.DrawColor(SKColors.Transparent);
-                canvas.Save();
-                canvas.Scale(scale, scale);
-                canvas.DrawPicture(source, (size - w) * scale / 2, (size - h) * scale / 2);
-                canvas.Restore();
-            });
-        }
-
-        public static SKBitmap? Clip(this SKBitmap source, SKRectI rect)
-        {
-            return Mutate(rect.Width, rect.Height, canvas => {
-                // canvas.Clear(SKColors.Transparent);
-                canvas.DrawBitmap(source, rect,
-                    SKRect.Create(0, 0, rect.Width, rect.Height));
-            });
-        }
-
-        public static SKBitmap? Clip(this SKBitmap source, SKPath path)
-        {
-            var rect = path.Bounds;
-            if (rect.IsEmpty || rect.Width < 1 || rect.Height < 1)
-            {
-                return null;
-            }
-            return Mutate((int)rect.Width, (int)rect.Height, canvas => {
-                canvas.DrawBitmap(source, rect,
-                   SKRect.Create(0, 0, rect.Width, rect.Height));
-                path.Offset(-rect.Left, -rect.Top);
-                canvas.ClipPath(path, SKClipOperation.Difference);
-                canvas.Clear();
-            });
-        }
-
-        public static SKImage? Clip(this SKImage source, SKPath path)
-        {
-            var rect = path.Bounds;
-            if (rect.IsEmpty || rect.Width < 1 || rect.Height < 1)
-            {
-                return null;
-            }
-            return MutateImage((int)rect.Width, (int)rect.Height, canvas => {
-                canvas.DrawImage(source, rect,
-                   SKRect.Create(0, 0, rect.Width, rect.Height));
-                path.Offset(-rect.Left, -rect.Top);
-                canvas.ClipPath(path, SKClipOperation.Difference);
-                canvas.Clear();
-            });
-        }
-
-        public static SKImage? Clip(this SKImage source, SKRectI rect)
-        {
-            return source.Subset(rect);
         }
 
         public static SKBitmap Mutate(SKRect rect, Action<SKCanvas> action)
@@ -216,44 +267,7 @@ namespace ZoDream.Shared.Drawing
             action?.Invoke(surface.Canvas);
             return surface.Snapshot();
         }
-        public static SKImage Flip(this SKImage bitmap, bool isHorizontal = true)
-        {
-            var cx = bitmap.Width / 2;
-            var cy = bitmap.Height / 2;
-            return MutateImage(bitmap.Width, bitmap.Height, surface => {
-                surface.Translate(cx, cy);
-                surface.Flip(isHorizontal);
-                surface.Translate(-cx, -cy);
-                surface.DrawImage(bitmap, 0, 0);
-            });
-        }
-        public static SKImage Rotate(this SKImage bitmap, float angle)
-        {
-            var (rotatedWidth, rotatedHeight) = ComputedRotate(bitmap.Width, bitmap.Height, angle);
-            return MutateImage(rotatedWidth, rotatedHeight, surface => {
-                surface.Translate(rotatedWidth / 2, rotatedHeight / 2);
-                surface.RotateDegrees(angle);
-                surface.Translate(-bitmap.Width / 2, -bitmap.Height / 2);
-                surface.DrawImage(bitmap, new SKPoint());
-            });
-        }
-
-        public static SKImage? Resize(this SKImage image, SKImageInfo info, SKSamplingOptions sampling)
-        {
-            if (info.IsEmpty)
-            {
-                return null;
-            }
-            var target = SKImage.Create(info);
-            using var targetPixMap = target.PeekPixels();
-            using var imagePixMap = image.PeekPixels();
-            if (imagePixMap.ScalePixels(targetPixMap, sampling))
-            {
-                return target;
-            }
-            target.Dispose();
-            return null;
-        }
+        
 
         private static bool LineIsIntersecting(SKPoint aBegin, SKPoint aEnd,
             SKPoint bBegin, SKPoint bEnd)

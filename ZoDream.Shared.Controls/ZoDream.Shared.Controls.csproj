@@ -2,12 +2,12 @@
 
   <PropertyGroup>
 	  <TargetFramework>net10.0-windows7.0</TargetFramework>
-	  <LangVersion>13</LangVersion>
+	  <LangVersion>14</LangVersion>
       <Nullable>enable</Nullable>
 	  <UseWPF>true</UseWPF>
 	  <Version>1.1</Version>
 	  <Authors>zodream</Authors>
-	  <Copyright>© 2025 zodream.cn</Copyright>
+	  <Copyright>© 2026 zodream.cn</Copyright>
   </PropertyGroup>
 
 
