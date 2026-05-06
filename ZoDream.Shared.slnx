@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="ZoDream.Shared.Controls/ZoDream.Shared.Controls.csproj" />
+  <Project Path="ZoDream.Shared.Drawing/ZoDream.Shared.Drawing.csproj" />
+  <Project Path="ZoDream.Shared.HexView/ZoDream.Shared.HexView.csproj" />
+  <Project Path="ZoDream.Shared.Http/ZoDream.Shared.Http.csproj" />
+  <Project Path="ZoDream.Shared.UndoRedo/ZoDream.Shared.UndoRedo.csproj" />
+  <Project Path="ZoDream.Shared/ZoDream.Shared.csproj" />
+</Solution>
